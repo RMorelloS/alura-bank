@@ -1,4 +1,4 @@
-package com.alrua.alurabank;
+package com.alura.alurabank.controller;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
