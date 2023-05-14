@@ -1,5 +1,6 @@
 package com.alura.alurabank.controller;
 
+import com.alura.alurabank.dominio.Investimentos;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,46 +14,37 @@ import java.util.Map;
 @RequestMapping("/investimentos")
 public class InvestimentosController {
 
-    private HashMap<String, BigDecimal> investimentos;
+
     @GetMapping
-    public ResponseEntity<Map<String, BigDecimal>> criarInvestimentos(){
-            investimentos = new HashMap<String, BigDecimal>();
-            investimentos.put("Poupança", BigDecimal.valueOf(0.05));
-            investimentos.put("Fundos de Investimento", BigDecimal.valueOf(0.15));
-            investimentos.put("CDI", BigDecimal.valueOf(0.16));
-            return ResponseEntity.status(HttpStatus.CREATED).body(investimentos);
+    public ResponseEntity<Investimentos> criarInvestimentos(){
+            Investimentos tipoInvestimentos = new Investimentos();
+            return ResponseEntity.status(HttpStatus.CREATED).body(tipoInvestimentos);
     }
   /* */
   @PostMapping
   public ResponseEntity<String> renderAporte(
-          @RequestBody ObjectNode investimento){
+          @RequestBody ObjectNode operacao){
+      Investimentos produtosInvestimentos = new Investimentos();
       String tipoInvestimento = "";
       try{
-         tipoInvestimento = investimento.get("tipoInvestimento").asText();
+         tipoInvestimento = operacao.get("tipoInvestimento").asText();
       }catch(Exception e){
           return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("Parâmetro tipoInvestimento não pode ser nulo");
       }
       String valorAporteStr = "";
       try{
-          valorAporteStr = investimento.get("valorAporte").asText();
+          valorAporteStr = operacao.get("valorAporte").asText();
       }catch(Exception e){
           return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body("Parâmetro valorAporte não pode ser nulo");
       }
 
       BigDecimal valorAporte = new BigDecimal(valorAporteStr);
-      BigDecimal percentualAplicacao = BigDecimal.valueOf(0);
-
-      investimentos = new HashMap<String, BigDecimal>();
-      investimentos.put("Poupança", BigDecimal.valueOf(0.05));
-      investimentos.put("Fundos de Investimento", BigDecimal.valueOf(0.15));
-      investimentos.put("CDI", BigDecimal.valueOf(0.16));
-
-      percentualAplicacao = investimentos.get(tipoInvestimento);
-
-      if(percentualAplicacao == null){
-          return ResponseEntity.status(HttpStatus.OK).body("Tipo de investimento não encontrado: -" + tipoInvestimento+"-");
-      }
-
-      return ResponseEntity.status(HttpStatus.OK).body("Valor final" + valorAporte.multiply(percentualAplicacao).add(valorAporte));
+      BigDecimal valorFinal = new BigDecimal(0);
+    try {
+         valorFinal = produtosInvestimentos.render(tipoInvestimento, valorAporte);
+    }catch(Exception e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.toString());
+    }
+      return ResponseEntity.status(HttpStatus.OK).body("Valor final " + valorFinal);
   }
 }
