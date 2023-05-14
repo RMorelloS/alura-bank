@@ -18,7 +18,7 @@ public class ContaCorrenteController {
             @RequestParam(name="banco") String banco,
             @RequestParam(name="agencia") String agencia,
             @RequestParam(name="numero") String numero){
-        return String.format("Banco: : %s Agencia: %s, ContAA: %s", banco, agencia, numero );
+            return String.format("Banco: : %s Agencia: %s, CONTAAA: %s", banco, agencia, numero );
     }
     @PostMapping
     public ResponseEntity<ContaCorrente>  criarNovaConta(@RequestBody Correntista correntista){
