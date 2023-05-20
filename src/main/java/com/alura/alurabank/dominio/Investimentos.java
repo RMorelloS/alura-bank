@@ -13,6 +13,7 @@ public class Investimentos {
     public Investimentos(){
         investimentos = new HashMap<String, BigDecimal>();
         investimentos.put("Poupança", BigDecimal.valueOf(0.05));
+        investimentos.put("Poupança1", BigDecimal.valueOf(0.055));
         investimentos.put("Fundos de Investimento", BigDecimal.valueOf(0.15));
         investimentos.put("CDI", BigDecimal.valueOf(0.16));
     }
@@ -24,7 +25,7 @@ public class Investimentos {
         BigDecimal percentualAplicacao = buscaInvestimentos(tipoInvestimento);
 
         if(percentualAplicacao == null){
-            throw new Exception("Tipologia de investimento não encontrada: " + tipoInvestimento);
+            throw new Exception("Tipologia de investimento não encontrada! " + tipoInvestimento);
         }
         return valorAporte.multiply(percentualAplicacao).add(valorAporte);
     }
